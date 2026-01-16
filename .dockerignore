@@ -1,0 +1,45 @@
+# Drone Secure - Docker Ignore
+# Fichiers à exclure lors de la construction de l'image Docker
+
+# Node modules (frontend React)
+node_modules/
+npm-debug.log
+
+# Git
+.git/
+.github/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+
+# Tests
+tests/
+*.test.js
+*.spec.js
+
+# Documentation
+*.md
+!README.md
+
+# Build artifacts
+dist/
+build/

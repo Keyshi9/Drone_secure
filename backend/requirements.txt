@@ -1,0 +1,7 @@
+# Drone Secure - Flask Backend Dependencies
+# Projet: Détection de drones (12-29 janvier 2026)
+
+Flask==2.3.3
+flask-cors==4.0.0
+psycopg2-binary==2.9.9
+gunicorn==21.2.0
