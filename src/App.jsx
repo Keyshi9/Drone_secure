@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
     Shield, LayoutDashboard, History, Settings, Radio, Signal, AlertTriangle,
     Wifi, Activity, Download, X, Volume2, VolumeX, Filter, ChevronRight,
-    Target, Clock, AlertCircle, CheckCircle2, RefreshCw
+    Target, Clock, AlertCircle, CheckCircle2, RefreshCw, LogIn
 } from 'lucide-react';
 import MapView from './MapView';
 import HistoryPage from './HistoryPage';
@@ -10,6 +10,7 @@ import TrackingPage from './TrackingPage';
 import ConfigPage from './ConfigPage';
 import { initialDrones, getStatusColor } from './data';
 import ExportPage from './export';
+import LoginPage from './LoginPage';
 
 
 export default function App() {
@@ -95,6 +96,10 @@ export default function App() {
                     <div className="flex items-center gap-3">
                         <span className="text-slate-400 text-sm font-mono hidden sm:flex items-center gap-2"><Clock size={14} />{currentTime.toLocaleTimeString('fr-FR')}</span>
                         <button onClick={() => setSoundEnabled(!soundEnabled)} className={`p-2 rounded-lg transition-all ${soundEnabled ? 'bg-blue-500/20 text-blue-400' : 'bg-slate-800 text-slate-500'}`}>{soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}</button>
+                        <button onClick={() => setActiveTab('login')} className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg shadow-blue-900/20 transition-all flex items-center gap-2">
+                            <LogIn size={16} />
+                            <span className="hidden sm:inline">Connexion</span>
+                        </button>
                     </div>
                 </header>
 
@@ -134,6 +139,7 @@ export default function App() {
                             <ExportPage />
                         </div>
                     )}
+                    {activeTab === 'login' && <LoginPage />}
                 </div>
             </div>
         </div>
