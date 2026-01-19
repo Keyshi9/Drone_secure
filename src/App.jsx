@@ -41,12 +41,12 @@ export default function App() {
             if (data.success) {
                 const formattedDetections = data.data.map(d => ({
                     id: d.id,
-                    type: d.frequency === '2.4 GHz' ? 'Signal WiFi' : 'Transmission Vidéo',
+                    type: d.detection_type || (d.frequency === '2.4 GHz' ? 'Signal WiFi' : 'Transmission Vidéo'),
                     freq: d.frequency,
                     rssi: d.rssi,
-                    droneId: `D-${d.id.toString().padStart(4, '0')}`,
+                    droneId: d.drone_id || `D-${d.id.toString().padStart(4, '0')}`,
                     timestamp: new Date(d.timestamp),
-                    status: d.rssi > -50 ? 'threat' : d.rssi > -70 ? 'unknown' : 'friendly',
+                    status: d.status || (d.rssi > -50 ? 'threat' : d.rssi > -70 ? 'unknown' : 'friendly'),
                     isNew: (new Date() - new Date(d.timestamp)) < 60000 // New if < 1 min
                 }));
                 setDetections(formattedDetections);

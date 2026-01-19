@@ -11,18 +11,23 @@ from flask_cors import CORS
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static_dist', static_url_path='/')
 CORS(app)
 
-# Configuration de la connexion à la base de données via variable d'environnement
+# Configuration
 DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://drone_user:drone_pass@db:5432/drone_db')
 
-
 def get_db_connection():
-    """Établit une connexion à la base de données PostgreSQL."""
     conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
     return conn
 
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
 
 @app.route('/health', methods=['GET'])
 def health_check():
@@ -74,13 +79,16 @@ def create_detection():
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute(
-            '''INSERT INTO detections (timestamp, frequency, rssi, position_gps)
-               VALUES (%s, %s, %s, %s) RETURNING id''',
+            '''INSERT INTO detections (timestamp, drone_id, detection_type, frequency, rssi, position_gps, status)
+               VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id''',
             (
                 datetime.utcnow(),
+                data.get('drone_id', 'UNKNOWN'),
+                data.get('detection_type', 'Unknown Signal'),
                 data['frequency'],
                 data['rssi'],
-                data['position_gps']
+                data['position_gps'],
+                data.get('status', 'unknown')
             )
         )
         detection_id = cur.fetchone()['id']
