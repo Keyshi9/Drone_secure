@@ -32,29 +32,34 @@ export default function App() {
         return () => clearInterval(timer);
     }, []);
 
-    // Simulate drone movement
-    useEffect(() => {
-        const moveTimer = setInterval(() => {
-            setDrones(prev => prev.map(drone => {
-                if (drone.status === 'threat') {
-                    return { ...drone, lat: drone.lat + (Math.random() - 0.5) * 0.002, lng: drone.lng + (Math.random() - 0.5) * 0.002 };
-                }
-                return drone;
-            }));
-        }, 3000);
-        return () => clearInterval(moveTimer);
-    }, []);
+    // Fetch detections from API
+    const fetchDetections = async () => {
+        try {
+            const response = await fetch('/api/detections');
+            const data = await response.json();
 
-    // Add new detections periodically
+            if (data.success) {
+                const formattedDetections = data.data.map(d => ({
+                    id: d.id,
+                    type: d.frequency === '2.4 GHz' ? 'Signal WiFi' : 'Transmission Vidéo',
+                    freq: d.frequency,
+                    rssi: d.rssi,
+                    droneId: `D-${d.id.toString().padStart(4, '0')}`,
+                    timestamp: new Date(d.timestamp),
+                    status: d.rssi > -50 ? 'threat' : d.rssi > -70 ? 'unknown' : 'friendly',
+                    isNew: (new Date() - new Date(d.timestamp)) < 60000 // New if < 1 min
+                }));
+                setDetections(formattedDetections);
+            }
+        } catch (error) {
+            console.error('Error fetching detections:', error);
+        }
+    };
+
     useEffect(() => {
-        const detectionTimer = setInterval(() => {
-            const rssi = -40 - Math.floor(Math.random() * 50);
-            setDetections(prev => [{
-                id: Date.now(), type: rssi > -50 ? 'Signal Puissant' : 'Scan Routine', freq: Math.random() > 0.5 ? '2.4 GHz' : '5.8 GHz',
-                rssi, droneId: rssi > -50 ? 'DX-9901' : null, timestamp: new Date(), status: rssi > -50 ? 'threat' : 'neutral', isNew: true
-            }, ...prev.map(d => ({ ...d, isNew: false })).slice(0, 9)]);
-        }, 8000);
-        return () => clearInterval(detectionTimer);
+        fetchDetections();
+        const interval = setInterval(fetchDetections, 2000);
+        return () => clearInterval(interval);
     }, []);
 
     const filteredDetections = filterStatus === 'all' ? detections : detections.filter(d => d.status === filterStatus);
