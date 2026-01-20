@@ -14,8 +14,8 @@ from psycopg2.extras import RealDictCursor
 app = Flask(__name__, static_folder='static_dist', static_url_path='/')
 CORS(app)
 
-# Configuration
-DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://drone_user:drone_pass@db:5432/drone_db')
+# Configuration - Base de données fournie par l'équipe BDD
+DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://admin:admin@172.17.0.2:5432/localisation_dronesdb')
 
 def get_db_connection():
     conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
