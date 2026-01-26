@@ -1,6 +1,5 @@
 # Drone Secure - Docker Compose Configuration
 # Projet: Détection de drones
-# Réalisation: 12-29 janvier 2026
 
 version: '3.8'
 
@@ -22,12 +21,12 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U drone_user -d drone_db"]
+      test: [ "CMD-SHELL", "pg_isready -U drone_user -d drone_db" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # Service de l'application Flask
+  # Service de l'application Flask + Frontend
   web:
     build:
       context: .
@@ -36,14 +35,13 @@ services:
     restart: unless-stopped
     environment:
       DATABASE_URL: postgresql://drone_user:drone_pass@db:5432/drone_db
-      FLASK_ENV: production
+      FLASK_ENV: development
     ports:
       - "5000:5000"
     depends_on:
       db:
         condition: service_healthy
     volumes:
-      # Volume pour les logs de l'application (optionnel en dev)
       - ./logs:/app/logs
 
 # Volumes persistants

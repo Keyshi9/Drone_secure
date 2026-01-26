@@ -1,4 +1,5 @@
 # Drone Secure - Full Stack Dockerfile
+
 # Stage 1: Build Frontend
 FROM node:18-alpine as build
 WORKDIR /app
@@ -7,7 +8,7 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# Stage 2: Production Backend & Serve
+# Stage 2: Production Backend & Serve Frontend
 FROM python:3.9-slim
 
 # Install system dependencies

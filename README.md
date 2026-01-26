@@ -1,85 +1,77 @@
-# 🛡️ Drone Secure - Système de Détection de Drones
+# 🚁 Drone Secure
 
-Dashboard de surveillance en temps réel pour la détection et le suivi de drones.
+Système de détection et surveillance de drones avec interface React et backend Flask/PostgreSQL.
 
-![Dashboard Preview](https://img.shields.io/badge/Status-Operational-brightgreen)
-![Version](https://img.shields.io/badge/Version-2.5-blue)
+## 🚀 Lancement avec Docker
 
----
+### Prérequis
+- Docker Desktop installé et en cours d'exécution
 
-## 🚀 Démarrage Rapide
+### Démarrage
 
-### Option 1 : Double-clic (Windows)
-1. **Double-cliquez sur `START.bat`**
-2. C'est tout ! Le dashboard s'ouvre automatiquement dans votre navigateur.
-
-### Option 2 : Ligne de commande
 ```bash
-npm install
-npm run dev
+# Construire et lancer l'application
+docker-compose up --build
+
+# Ou en arrière-plan
+docker-compose up --build -d
 ```
-Puis ouvrez [http://localhost:5173](http://localhost:5173)
 
----
+### Accès
+- **Application**: http://localhost:5000
+- **Base de données**: localhost:5432 (drone_user / drone_pass)
 
-## 📋 Prérequis
+## 📡 API
 
-- **Node.js** (version 18 ou supérieure) - [Télécharger ici](https://nodejs.org/)
+### Endpoints
 
-Pour vérifier si Node.js est installé :
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| GET | `/api/detections` | Liste des détections |
+| POST | `/api/detections` | Nouvelle détection |
+| GET | `/api/detections/:id` | Détection par ID |
+| DELETE | `/api/detections/:id` | Supprimer détection |
+| GET | `/api/detections/stats` | Statistiques |
+| GET | `/health` | État du service |
+
+### Ajouter une détection (exemple)
+
 ```bash
-node -v
+curl -X POST http://localhost:5000/api/detections \
+  -H "Content-Type: application/json" \
+  -d '{
+    "frequency": "2.4 GHz",
+    "rssi": -55,
+    "position_gps": "48.8566,2.3522",
+    "drone_id": "TEST-001",
+    "detection_type": "DJI Mavic",
+    "status": "threat"
+  }'
 ```
 
----
+## 🗄️ Base de données
 
-## 🎯 Fonctionnalités
+La base PostgreSQL est initialisée automatiquement avec des données de test au premier démarrage.
 
-| Section | Description |
-|---------|-------------|
-| **Dashboard** | Carte interactive de Sainte-Croix avec détection en temps réel |
-| **Historique** | Tableau des détections passées avec filtres et recherche |
-| **Tracking** | Suivi détaillé des drones actifs (GPS, altitude, vitesse) |
-| **Configuration** | Paramètres système, alertes et préférences |
+### Structure de la table `detections`
 
----
+| Colonne | Type | Description |
+|---------|------|-------------|
+| id | SERIAL | Identifiant unique |
+| timestamp | TIMESTAMP | Horodatage |
+| drone_id | VARCHAR(50) | ID du drone |
+| detection_type | VARCHAR(50) | Type de signal |
+| frequency | VARCHAR(20) | 2.4 GHz ou 5.8 GHz |
+| rssi | INTEGER | Puissance signal (-100 à 0 dBm) |
+| position_gps | VARCHAR(50) | Coordonnées GPS |
+| status | VARCHAR(20) | threat, friendly, unknown |
 
-## 🛠️ Technologies
+## 🛑 Arrêt
 
-- **React 18** - Interface utilisateur
-- **Tailwind CSS** - Styles
-- **Leaflet** - Cartographie
-- **Lucide React** - Icônes
-- **Vite** - Build tool
+```bash
+# Arrêter les conteneurs
+docker-compose down
 
----
-
-## 📁 Structure du Projet
-
+# Arrêter et supprimer les données
+docker-compose down -v
 ```
-drone/
-├── src/
-│   ├── App.jsx          # Application principale
-│   ├── MapView.jsx      # Composant carte
-│   ├── HistoryPage.jsx  # Page historique
-│   ├── TrackingPage.jsx # Page tracking
-│   ├── ConfigPage.jsx   # Page configuration
-│   ├── data.js          # Données et constantes
-│   └── index.css        # Styles globaux
-├── START.bat            # Script de lancement Windows
-└── package.json         # Dépendances
-```
-
----
-
-## 👥 Équipe
-
-Développé pour le projet de sécurité aérienne.
-
----
-
-## 📝 Notes
-
-- La carte utilise OpenStreetMap (pas de clé API requise)
-- Les données des drones sont simulées pour la démonstration
-- Thème sombre optimisé pour les environnements de surveillance
