@@ -6,8 +6,15 @@ Système de détection et surveillance de drones avec interface React et backend
 
 ### Prérequis
 - Docker Desktop installé et en cours d'exécution
+- Node.js (version 16 ou plus)
+- npm
+
+### Installation
+1. Cloner le projet
+2. Lancer `npm install` pour installer les dépendances.
 
 ### Démarrage
+
 
 ```bash
 # Construire et lancer l'application
