@@ -1,8 +1,8 @@
-# 🚁 Drone Secure
+# Drone Secure
 
 Système de détection et surveillance de drones avec interface React et backend Flask/PostgreSQL.
 
-## 🚀 Lancement avec Docker
+## Lancement avec Docker
 
 ### Prérequis
 - Docker Desktop installé et en cours d'exécution
@@ -21,7 +21,7 @@ docker-compose up --build -d
 - **Application**: http://localhost:5000
 - **Base de données**: localhost:5432 (drone_user / drone_pass)
 
-## 📡 API
+## API
 
 ### Endpoints
 
@@ -49,7 +49,7 @@ curl -X POST http://localhost:5000/api/detections \
   }'
 ```
 
-## 🗄️ Base de données
+## Base de données
 
 La base PostgreSQL est initialisée automatiquement avec des données de test au premier démarrage.
 
@@ -66,7 +66,7 @@ La base PostgreSQL est initialisée automatiquement avec des données de test au
 | position_gps | VARCHAR(50) | Coordonnées GPS |
 | status | VARCHAR(20) | threat, friendly, unknown |
 
-## 🛑 Arrêt
+## Arrêt
 
 ```bash
 # Arrêter les conteneurs
